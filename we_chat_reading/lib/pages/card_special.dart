@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'base_card.dart';
 import 'package:dio/dio.dart';
-
+import 'package:we_chat_reading/pages/more_books.dart';
 //免费听书馆
 class CardSpecial extends BaseCard{
   @override
@@ -9,6 +11,9 @@ class CardSpecial extends BaseCard{
 }
 
 class _CardSpecialState extends BaseCardState{
+
+  List<String> bookList = [];
+
   @override
   void initState() {
     subTitleColor = Colors.purple; // 重写subTitleColor
@@ -22,28 +27,43 @@ class _CardSpecialState extends BaseCardState{
     return Column(
       children: <Widget>[
         Container(
-          height: 200,
-          width: 150,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Color(0xfffffcf7),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 20,
-                  offset: Offset(
-                    0, // 水平偏移量 
-                    10, // 垂直偏移量
-                  )
-                )
-              ]
-            ),
-            child: Image.network('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=184920421,3115871147&fm=26&gp=0.jpg'),
+          height: 220.0,
+          child: ListView.builder(
+            itemCount: bookList.length,
+            // itemExtent: 50.0,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text('免费书本$index'),
+                leading: Icon(
+                  Icons.ac_unit
+                ),
+              );
+            },
           ),
         ),
+        // Container(
+        //   height: 200,
+        //   width: 150,
+        //   padding: EdgeInsets.all(10),
+        //   decoration: BoxDecoration(
+        //     color: Color(0xfffffcf7),
+        //   ),
+        //   child: Container(
+        //     decoration: BoxDecoration(
+        //       boxShadow: [
+        //         BoxShadow(
+        //           color: Colors.grey,
+        //           blurRadius: 20,
+        //           offset: Offset(
+        //             0, // 水平偏移量 
+        //             10, // 垂直偏移量
+        //           )
+        //         )
+        //       ]
+        //     ),
+        //     child: Image.network('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=184920421,3115871147&fm=26&gp=0.jpg'),
+        //   ),
+        // ),
         Container(
           padding: EdgeInsets.fromLTRB(10, 15, 15, 10),
           decoration: BoxDecoration(
@@ -132,7 +152,18 @@ class _CardSpecialState extends BaseCardState{
               ],
             ),
           ),
-          bottomTitle('更多免费好书领不停 >')
+          bottomTitle('更多免费好书领不停 >'),
+          RaisedButton(
+            onPressed: () async{
+               final result = await Navigator.push(context, MaterialPageRoute(builder: (contex)=>BooksPage()));
+               setState(() {
+                 bookList.addAll(result);
+               });
+               print('$result');
+               Scaffold.of(context).showSnackBar(SnackBar(content:Text('$result')));
+            },
+            child: Text('去获取免费好书'),
+          )
         ],
       ),
     );
